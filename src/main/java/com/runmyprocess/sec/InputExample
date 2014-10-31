@@ -1,0 +1,60 @@
+##SEARCH
+{
+"protocol":"LDAP",
+"data":{
+        "operation":"SEARCH",
+        "baseDN":"DC=example,DC=com",
+        "filter": "(&(|(objectClass=organizationalUnit)(objectClass=container)))"
+    } 
+}
+
+##ADD
+{
+"protocol":"LDAP",
+"data":{
+        "operation":"ADD",
+        "userDN":"cn=admin,dc=example,dc=com",
+        "password":"password",
+        "ldif": [
+                                "dn: cn=Malcolm Haslam,ou=People,dc=example,dc=com",
+                                "cn: Malcolm Haslam",
+                                "gidnumber: 503",
+                                "givenname: Malcolm",
+                                "homedirectory: /home/users/mhaslam",
+                                "objectclass: inetOrgPerson",
+                                "objectclass: posixAccount",
+                                "objectclass: top",
+                                "sn: Haslam",
+                                "uid: mhaslam",
+                                "uidnumber: 1013",
+                                "userpassword: {MD5}jJI2VneTyGdVUV5JIfooag=="       
+                          ]
+    } 
+}
+
+##MODIFY
+{
+"protocol":"LDAP",
+"data":{
+        "operation":"MODIFY",
+        "userDN":"cn=admin,dc=example,dc=com",
+        "password":"password",
+        "ldif": [
+                 "dn: dc=example,dc=com",
+     		 "changetype: modify",
+     		 "replace: description",
+    		 "description: MODIFY Example"     
+                          ]
+    } 
+}
+
+##DELETE
+{
+"protocol":"LDAP",
+"data":{
+        "operation":"DELETE",
+        "userDN":"cn=admin,dc=example,dc=com",
+        "password":"password",
+        "deleteDN": "cn=Malcolm Haslam,ou=People,dc=example,dc=com"
+    } 
+}

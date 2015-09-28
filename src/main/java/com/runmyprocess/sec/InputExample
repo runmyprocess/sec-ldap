@@ -2,12 +2,12 @@
 {
 "protocol":"LDAP",
 "data":{
-        "operation":"SEARCH",
-        "userDN":"cn=admin,dc=example,dc=com",
-        "password":"password",
-        "baseDN":"DC=example,DC=com",
-        "filter": "(&(|(objectClass=organizationalUnit)(objectClass=container)))"
-    } 
+    "operation":"SEARCH",
+    "userDN":"cn=admin,dc=example,dc=com",
+    "filter": "(&(gn=J*))",
+"scope":"SUB",
+"attributes":["att1","att2"]
+    }
 }
 
 ##ADD

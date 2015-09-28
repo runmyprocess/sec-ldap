@@ -1,6 +1,8 @@
 package com.runmyprocess.sec;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.naming.directory.*;
@@ -46,7 +48,9 @@ public class LDAP implements ProtocolInterface{
     private enum Operation {
         SEARCH, ADD, MODIFY, DELETE
     }
-
+    private enum EnumScope {
+        BASE,ONE, SUB,SUBORDINATE_SUBTREE
+    }
     public LDAP() {
 
         // TODO Auto-generated constructor stub
@@ -113,7 +117,39 @@ public class LDAP implements ProtocolInterface{
             String baseDN = jsonObject.getString("baseDN");
             String filter =  jsonObject.getString("filter");
 
-            searchResult = this.connection.search(baseDN, SearchScope.ONE, filter);
+            SearchScope sc = SearchScope.ONE;
+            if(jsonObject.containsKey("scope")){
+                EnumScope enumScope = EnumScope.valueOf(jsonObject.getString("scope"));
+                switch(enumScope) {
+                    case BASE:
+                        sc = SearchScope.BASE;
+                        break;
+                    case ONE:
+                        sc = SearchScope.ONE;
+                        break;
+                    case SUB:
+                        sc = SearchScope.SUB;
+                        break;
+                    case SUBORDINATE_SUBTREE:
+                        sc = SearchScope.SUBORDINATE_SUBTREE;
+                        break;
+                    default:throw new LDAPSearchException(ResultCode.NO_SUCH_ATTRIBUTE,"The scope "+jsonObject.getString("scope")+" is unknown");
+                }
+            }
+            if (jsonObject.containsKey("attributes")){
+                ArrayList<String> list = new ArrayList<String>();
+                JSONArray jsonArray = jsonObject.getJSONArray("attributes");
+                if (jsonArray != null) {
+                    int len = jsonArray.size();
+                    for (int i=0;i<len;i++){
+                        list.add(jsonArray.get(i).toString());
+                    }
+                }
+                searchResult = this.connection.search(baseDN, sc, filter,list.toArray(new String[list.size()]));
+            }else{
+                searchResult = this.connection.search(baseDN, sc, filter);
+            }
+
 
             response.setStatus(200);
             JSONObject reply = new JSONObject();
